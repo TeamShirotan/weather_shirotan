@@ -1,24 +1,21 @@
 #encoding:utf-8
 
 # ***********************
-# *** Python 2.x only ***
+# *** Python 3.x only ***
 # ***********************
 
-import urllib2, sys
-import sys
+import urllib.request
 import json
 
 def getWeather():
-	try: citycode = sys.argv[1]
-	except: citycode = '270000' #大阪府　大阪
-
-	resp = urllib2.urlopen('http://weather.livedoor.com/forecast/webservice/json/v1?city=%s'%citycode).read()
+	citycode = '270000' #大阪府　大阪
+	html = urllib.request.urlopen('http://weather.livedoor.com/forecast/webservice/json/v1?city=%s'%citycode)
 
 	# 読み込んだJSONデータをディクショナリ型に変換
-	resp_dict = json.loads(resp)
-	print (resp_dict['title'])
+	resp_dict = json.loads(html.read().decode('utf-8'))
 
-	print (u'今日の天気は{}だよ'.format(resp_dict['forecasts'][0]['telop']))
+#	print (resp_dict['title'])
+#	print (u'今日の天気は{}だよ'.format(resp_dict['forecasts'][0]['telop']))
 
 	#for forecast in resp['forecasts']:
 	#    print '**************************'
@@ -26,5 +23,8 @@ def getWeather():
 	#    print forecast['telop']
 	#print '**************************'
 
+	return resp_dict['forecasts'][0]['telop']
+
 if __name__ == "__main__" :
-	getWeather()
+	weather = getWeather()
+	print (u'今日の天気は{}だよ'.format(weather))
